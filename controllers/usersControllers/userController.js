@@ -124,8 +124,8 @@ exports.updatePassword = async (req, res, next) => {
   const currentUser = await User.findById(decoded.id);
   
 
-  console.log(currentUser.password);
-  console.log(req.body.password)
+  // console.log(currentUser.password);
+  // console.log(req.body.password)
 
   // if (req.body.password === currentUser.password) {
   //   const filteredBody = filterObj(req.body, 'login', 'email');

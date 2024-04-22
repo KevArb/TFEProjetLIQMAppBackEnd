@@ -20,18 +20,16 @@ exports.createNewSheet = catchAsync(async (req, res, next) => {
   const maintenance = await Maintenance.findById(
     req.params.maintenanceId,
   ).populate('maintenanceSheet');
-
   if (!maintenance) {
     return next(new AppError('Pas de maintenance trouvée'), 404);
   }
-  // console.log(maintenance.equipment.id)
-  req.body.name = `FM_${maintenance.code}_${Date.now()}`;
+  const options = { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'};
+  var numberMS = new Date().toLocaleString('fr-FR', options).replaceAll('/', '').replaceAll(':', '').replaceAll(' ', '');
+  req.body.name = `FM_${maintenance.code}_${numberMS}`;
   req.body.maintenanceSteps = maintenance.steps;
   // req.body.maintenanceSteps.title = maintenance.steps.title;
   req.body.equipment = maintenance.equipment.id;
   const maintenanceSheet = await MaintenanceSheet.create(req.body);
-  // console.log(maintenance.steps);
-
   maintenance.steps.forEach(async (el) => {
         await MaintenanceSteps.create({
           maintenance: maintenance.id,
@@ -41,7 +39,6 @@ exports.createNewSheet = catchAsync(async (req, res, next) => {
           description : el.description,
       }); 
   });
-
   res.status(201).json({
     status: 'success',
     data: {
@@ -51,13 +48,10 @@ exports.createNewSheet = catchAsync(async (req, res, next) => {
 });
 
 exports.getSteps = catchAsync(async (req, res, next) => {
-  // const maintenance = await Maintenance.find( {id : req.params.maintenanceId, maintenanceSteps : { _id: req.params.maintenanceStepId }});
   const steps = await MaintenanceSteps.find({ maintenanceSheet : req.params.maintenanceId});
-
   if (!steps) {
     return next(new AppError('Pas de maintenance trouvée'), 404);
-  }
-  
+  } 
   res.status(201).json({
     status: 'success',
     data: {
@@ -89,18 +83,15 @@ exports.getComments = catchAsync(async (req, res, next) => {
 
 exports.getOneStep = catchAsync( async (req, res, next) => {
   const step = await MaintenanceSteps.findById(req.params.stepId);
-  
   if (!step || step === null) {
     return next(new AppError('Pas de step'), 404);
   }
-
   res.status(201).json({
     status: 'success',
     data: {
       data: step,
     },
   });
-
 })
 
 exports.actionStep = catchAsync(async (req, res, next) => {
@@ -117,11 +108,8 @@ exports.actionStep = catchAsync(async (req, res, next) => {
   });
 });
 
-
-
 exports.validateMaintenanceSheet = catchAsync(async (req, res, next) => {
   const FM = await MaintenanceSheet.findById(req.params.id);
-
   let token;
   if (
     req.headers.authorization &&
@@ -129,7 +117,6 @@ exports.validateMaintenanceSheet = catchAsync(async (req, res, next) => {
   ) {
     token = req.headers.authorization.split(' ')[1];
   }
-
   if (!token) {
     return next(
       new AppError('Vous devez être loggé pour avoir accès à cette page', 401),
@@ -137,19 +124,15 @@ exports.validateMaintenanceSheet = catchAsync(async (req, res, next) => {
   }
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
   const currentUser = await User.findById(decoded.id);
-
   if (!FM) {
     return next(new AppError('Page non trouvé', 404));
   }
-
   if (FM.finalStatus !== 'Fait') {
     return next(new AppError('La FM doit être faite', 501));
   }
-
   if (FM.isValidate === true) {
     return next(new AppError('FM déjà validée', 501));
   }
-
   const FM2 = await MaintenanceSheet.findByIdAndUpdate(
     req.params.id,
     { isValidate: true, isValidatedBy: currentUser },
@@ -158,7 +141,6 @@ exports.validateMaintenanceSheet = catchAsync(async (req, res, next) => {
       runValidators: true,
     },
   );
-
   res.status(200).json({
     status: 'success',
     data: {
@@ -166,7 +148,6 @@ exports.validateMaintenanceSheet = catchAsync(async (req, res, next) => {
     },
   });
 });
-
 
 exports.getAllMaintenanceSheet = handler.getAll(MaintenanceSheet, 'equipment');
 exports.getMaintenanceSheet = handler.getOne(MaintenanceSheet);
