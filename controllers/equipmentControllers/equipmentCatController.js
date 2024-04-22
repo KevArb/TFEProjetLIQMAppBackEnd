@@ -1,5 +1,6 @@
 const EquipmentCat = require('../../models/equipmentModels/equipmentCategoryModel');
 const handler = require('../cruadHandler');
+//test
 
 exports.createEquipmentCat = handler.createOne(EquipmentCat);
 exports.getAllEquipmentCats = handler.getAll(EquipmentCat);
