@@ -60,7 +60,6 @@ exports.commentIncident = catchAsync(async (req, res, next) => {
   req.body.incident = incident; 
 
   const incidentComment = await IncidentCommentsByUser.create(req.body);
-  console.log('4')
   res.status(200).json({
     status: 'success',
     data: {

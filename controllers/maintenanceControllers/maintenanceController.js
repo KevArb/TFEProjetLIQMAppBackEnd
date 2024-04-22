@@ -34,7 +34,6 @@ exports.createMaintenance = catchAsync(async (req, res, next) => {
 });
 
 exports.newMaintenance = catchAsync(async (req, res, next) => {
-  console.log(req.body)
   const equipment = await Equipment.findById(req.body.equipment).populate(
     'maintenances',
   );

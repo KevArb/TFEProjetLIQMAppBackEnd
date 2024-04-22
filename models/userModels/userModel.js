@@ -97,7 +97,6 @@ userSchema.methods.correctPassword = async function (
   candidatePassword,
   userPassword,
 ) {
-  console.log('12')
   return await bcrypt.compare(candidatePassword, userPassword);
 };
 
@@ -123,7 +122,7 @@ userSchema.methods.createPasswordResetToken = function () {
     .update(resetToken)
     .digest('hex');
 
-  console.log({ resetToken }, this.passwordResetToken);
+  // console.log({ resetToken }, this.passwordResetToken);
 
   // Bug to fix: for this project I needed to add 2 hours because Date.now() return date -one hour ???
   this.passwordResetExpires = Date.now() + 2 * 60 * 60 * 1000;
