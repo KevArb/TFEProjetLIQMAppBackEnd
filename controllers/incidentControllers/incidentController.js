@@ -54,11 +54,12 @@ exports.createIncident = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.commentIncident = catchAsync(async (req, res, next) => {  
+exports.commentIncident = catchAsync(async (req, res, next) => { 
+  console.log(req.params.id) 
   const incident = await Incident.findById(req.params.id);
   req.body.commentedBy = res.locals.user.id;
-  req.body.incident = incident; 
-
+  req.body.incident = incident;
+  console.log(req.body)
   const incidentComment = await IncidentCommentsByUser.create(req.body);
   res.status(200).json({
     status: 'success',
@@ -94,7 +95,7 @@ exports.getIncidentsByIdEquipment = catchAsync(async (req, res, next) => {
 });
 
 exports.getIncidentDetails = catchAsync(async (req, res, next) => {
-  const incident = await Incident.findById(req.params.id);
+  const incident = await Incident.findById(req.params.id).populate('createdBy');
 
   res.status(200).json({
     status: 'success',

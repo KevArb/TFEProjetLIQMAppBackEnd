@@ -12,7 +12,7 @@ const incidentCommentsByUserSchema = new mongoose.Schema(
     },
     commentType: {
       type: String,
-      enum: ['Résolution', 'Clôture', 'Commentaire', 'Reouvert'],
+      enum: ['Commentaire', 'En cours', "En attente d'une action", 'Résolu', 'Clôturé', 'Clarification'],
       default: 'Commentaire'
     },
     comment: String,

@@ -22,13 +22,10 @@ router
 router
   .route('/:id')
   .get(incidentController.getIncidentDetails)
-  // .get(incidentController.getIncident)
   .delete(incidentController.deleteIncident)
   .patch(incidentController.updateIncident);
 
 router.route('/:id/newComment').post(incidentController.commentIncident);
-
-// router.use(authController.restrictTo('admin', 'manager'));
 
 router
   .route('/:id/closeIncident')

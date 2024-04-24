@@ -31,9 +31,7 @@ const incidentSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: {
-        values: ['En cours', 'En attente', 'Résolu', 'Clôturé'],
-      },
+      enum: ['En cours', "En attente d'une action", 'Résolu', 'Clôturé', 'Clarification'],
       default: 'En cours',
     },
     createdAt: {

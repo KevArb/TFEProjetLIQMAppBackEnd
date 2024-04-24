@@ -3,7 +3,14 @@ const MaintenanceSheet = require('./maintenanceSheetModel');
 
 const maintenaceStepComment = new mongoose.Schema(
     {
-        comment: String,
+        comment: {
+            type: String,
+            required: [true, 'Veuillez renseigner une raison'],
+            validate: { 
+                validator: noEmptyStringAllowed,
+                message: 'Veuillez renseigner une raison'
+            }
+        },
         step: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'MaintenanceSteps',
@@ -29,6 +36,10 @@ const maintenaceStepComment = new mongoose.Schema(
         toObject: { virtuals: true },
     },
 )
+
+function noEmptyStringAllowed(value) {
+    return value.trim().length >0;
+}
 
 const MaintenanceStepComment = mongoose.model(
     'maintenanceStepComment',

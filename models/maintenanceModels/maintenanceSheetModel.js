@@ -32,7 +32,7 @@ const maintenanceSheetSchema = new mongoose.Schema(
     finalComment: String,
     finalStatus: {
       type: String,
-      enum: ['En cours', 'En erreur', 'En attente', 'Fait', 'Discontiné'],
+      enum: ['En cours', 'En erreur', 'En attente', 'Fait', 'Discontinué'],
       default: 'En cours',
     },
     isValidate: {
