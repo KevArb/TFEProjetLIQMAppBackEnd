@@ -47,6 +47,10 @@ const incidentSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Equipment',
     },
+    isClosed: {
+      type: String,
+      default: false,
+    }
   },
   {
     toJSON: { virtuals: true },

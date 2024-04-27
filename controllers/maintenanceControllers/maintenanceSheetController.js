@@ -20,16 +20,19 @@ exports.createNewSheet = catchAsync(async (req, res, next) => {
   const maintenance = await Maintenance.findById(
     req.params.maintenanceId,
   ).populate('maintenanceSheet');
+
   if (!maintenance) {
     return next(new AppError('Pas de maintenance trouvée'), 404);
   }
+
   const options = { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'};
   var numberMS = new Date().toLocaleString('fr-FR', options).replaceAll('/', '').replaceAll(':', '').replaceAll(' ', '');
   req.body.name = `FM_${maintenance.code}_${numberMS}`;
   req.body.maintenanceSteps = maintenance.steps;
+  req.body.startedBy = res.locals.user.id;
   // req.body.maintenanceSteps.title = maintenance.steps.title;
   req.body.equipment = maintenance.equipment.id;
-  const maintenanceSheet = await MaintenanceSheet.create(req.body);
+  const maintenanceSheet = (await MaintenanceSheet.create(req.body));
   maintenance.steps.forEach(async (el) => {
         await MaintenanceSteps.create({
           maintenance: maintenance.id,
@@ -149,6 +152,6 @@ exports.validateMaintenanceSheet = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getAllMaintenanceSheet = handler.getAll(MaintenanceSheet, 'equipment');
+exports.getAllMaintenanceSheet = handler.getAll(MaintenanceSheet, 'equipment startedBy');
 exports.getMaintenanceSheet = handler.getOne(MaintenanceSheet);
 exports.updateMaintenanceSheet = handler.updateOne(MaintenanceSheet);

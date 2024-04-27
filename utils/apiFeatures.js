@@ -4,11 +4,11 @@ class APIFeatures {
     this.queryString = queryString;
   }
 
+  
+
   filter() {
-    // ?? what does mean { ...this.queryString } => basic javascript ?
     const queryObject = { ...this.queryString };
-    const excludeFields = ['page', 'sort', 'limit', 'fields'];
-    // array.foreach((element) => console.log(element));
+    const excludeFields = ['page', 'sort', 'limit', 'fields', 'search'];
     excludeFields.forEach((el) => delete queryObject[el]);
 
     // JSON.stringify will convert our req.query to a JSON
@@ -24,7 +24,6 @@ class APIFeatures {
   sort() {
     if (this.queryString.sort) {
       const sortBy = this.queryString.sort.split(',').join(' ');
-      //console.log(sortBy);
       this.query = this.query.sort(sortBy);
     } else {
       this.query = this.query.sort('-createdAt');
@@ -53,6 +52,7 @@ class APIFeatures {
 
     return this;
   }
+
 }
 
 module.exports = APIFeatures;

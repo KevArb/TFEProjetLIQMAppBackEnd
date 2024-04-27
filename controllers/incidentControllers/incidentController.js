@@ -83,9 +83,7 @@ exports.getComments = catchAsync(async (req, res, next) => {
 exports.getIncidentsByIdEquipment = catchAsync(async (req, res, next) => {
   let filter = {};
   if (req.params.equipmentId) filter = { equipment: req.params.equipmentId };
-
-  const incidents = await Incident.find({ filter }, req.query);
-
+  const incidents = await Incident.find( filter ).populate('createdBy');
   res.status(200).json({
     status: 'success',
     data: {

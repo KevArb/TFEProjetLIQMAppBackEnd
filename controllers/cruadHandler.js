@@ -16,13 +16,13 @@ exports.createOne = (Model) =>
 
 exports.getOne = (Model, popOptions) =>
   catchAsync(async (req, res, next) => {
+    console.log('getOne')
     let query = Model.findById(req.params.id);
     if (popOptions) query = Model.findById(req.params.id).populate(popOptions);
     const role = res.locals.user.role;
-    const doc = await query;
-    // console.log(doc)
+    const doc  = await query;
     if (!doc) {
-      return next(new AppError('Page non trouvé', 404));
+      return next(new AppError('Item non trouvé', 404));
     }
     res.status(200).json({
       status: 'success',
@@ -35,7 +35,6 @@ exports.getOne = (Model, popOptions) =>
 
 exports.getAll = (Model, pop) =>
   catchAsync(async (req, res, next) => {
-    // To allow for nested GET reviews on Tour (hack)
     let filter = {};
     if (req.params.equipmentId) filter = { equipment: req.params.equipmentId };
     const role = res.locals.user.role;
@@ -44,9 +43,10 @@ exports.getAll = (Model, pop) =>
       .sort()
       .limitFields()
       .paginate();
-   
-    const doc = await features.query;
-    // console.log(doc)
+    let doc = await features.query;
+    if (req.query.search) {
+        doc = doc.filter(item => item.name.toLowerCase().includes(req.query.search.toLowerCase()))
+    }
     res.status(200).json({
       status: 'success',
       results: doc.length,

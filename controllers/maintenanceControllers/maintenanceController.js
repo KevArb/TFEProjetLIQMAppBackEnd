@@ -52,7 +52,20 @@ exports.newMaintenance = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.getMaintenanceUpdate = catchAsync(async (req, res, next) => {
+  const maintenance = await Maintenance.findById(req.params.id);
+  const role = res.locals.user.role;
+  if (!maintenance) {
+    return next(new AppError('Item non trouvé', 404));
+  }
+  res.status(200).json({
+    status: 'success',
+    role: role,
+    data: maintenance,
+  });
+})
+
 exports.updateMaintenanceSheet = handler.updateOne(Maintenance);
-exports.getAllMaintenance = handler.getAll(Maintenance);
+exports.getAllMaintenance = handler.getAll(Maintenance, 'equipment');
 exports.getMaintenance = handler.getOne(Maintenance);
 exports.archiveMaintenance = handler.archiveOne(Maintenance);

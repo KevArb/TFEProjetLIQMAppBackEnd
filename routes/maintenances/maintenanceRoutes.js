@@ -8,16 +8,16 @@ const authController = require('../../controllers/usersControllers/authControlle
 router.use(authController.protect);
 router.use(authController.isLoggedIn);
 
+router
+  .route('/getMaintenance/:id')
+  .get(maintenanceController.getMaintenanceUpdate)
+  .patch(maintenanceController.updateMaintenanceSheet);
+
 router.use('/:maintenanceId', maintenanceSheetRouter);
 
 router.route('/').get(maintenanceController.getAllMaintenance);
 
-router
-  .route('/:id')
-  .get(maintenanceController.getMaintenance)
-  .patch(maintenanceController.updateMaintenanceSheet);
 
-// router.use(authController.restrictTo('manager'));
 
 router
   .route('/newMaintenance')

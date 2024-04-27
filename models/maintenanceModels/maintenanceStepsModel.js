@@ -25,7 +25,7 @@ const maintenanceStepsSchema = new mongoose.Schema(
       type: String,
       default: '',
     }, 
-    updatedAt: Date, 
+    updatedAt: Date,
   },
   {
     toJSON: { virtuals: true },

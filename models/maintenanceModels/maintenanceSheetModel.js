@@ -53,6 +53,10 @@ const maintenanceSheetSchema = new mongoose.Schema(
         ref: 'User',
       },
     ],
+    startedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+  }
   },
   {
     toJSON: { virtuals: true },
