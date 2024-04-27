@@ -17,8 +17,6 @@ router.use('/:maintenanceId', maintenanceSheetRouter);
 
 router.route('/').get(maintenanceController.getAllMaintenance);
 
-
-
 router
   .route('/newMaintenance')
   .post(

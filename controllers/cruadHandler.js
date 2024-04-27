@@ -16,7 +16,6 @@ exports.createOne = (Model) =>
 
 exports.getOne = (Model, popOptions) =>
   catchAsync(async (req, res, next) => {
-    console.log('getOne')
     let query = Model.findById(req.params.id);
     if (popOptions) query = Model.findById(req.params.id).populate(popOptions);
     const role = res.locals.user.role;
@@ -43,7 +42,9 @@ exports.getAll = (Model, pop) =>
       .sort()
       .limitFields()
       .paginate();
+
     let doc = await features.query;
+
     if (req.query.search) {
         doc = doc.filter(item => item.name.toLowerCase().includes(req.query.search.toLowerCase()))
     }
