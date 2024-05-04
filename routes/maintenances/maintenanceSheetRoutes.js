@@ -6,6 +6,7 @@ const authController = require('../../controllers/usersControllers/authControlle
 
 router.use(authController.protect);
 router.use(authController.isLoggedIn);
+router.use(authController.protect);
 
 router.route('/').get(maintenanceSheetController.getAllMaintenanceSheet);
 router.route('/:id')

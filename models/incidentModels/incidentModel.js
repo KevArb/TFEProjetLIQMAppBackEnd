@@ -20,7 +20,6 @@ const incidentSchema = new mongoose.Schema(
     },
     dateTimeOfIncident: {
       type: Date,
-      default: Date.now(),
     },
     impact: {
       type: String,
@@ -36,7 +35,6 @@ const incidentSchema = new mongoose.Schema(
     },
     createdAt: {
       type: Date,
-      default: Date.now(),
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
@@ -59,6 +57,11 @@ const incidentSchema = new mongoose.Schema(
 );
 
 //MIDELWARE PRE
+incidentSchema.pre('save', function(next) {
+  this.dateTimeOfIncident = new Date();
+  this.createdAt = new Date();
+  next();
+})
 incidentSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'equipment',

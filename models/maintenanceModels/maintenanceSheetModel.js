@@ -8,7 +8,6 @@ const maintenanceSheetSchema = new mongoose.Schema(
     name: String,
     createdAt: {
       type: Date,
-      default: Date.now(),
     },
     updatedAt: Date,
     maintenanceSteps: [
@@ -64,9 +63,10 @@ const maintenanceSheetSchema = new mongoose.Schema(
   },
 );
 
-// maintenanceSheetSchema.post(/^find/, function (doc) {
-//   console.log(this.maintenanceSteps);
-// });
+maintenanceSheetSchema.pre('save', function(next) {
+  this.createdAt = new Date();
+  next();
+})
 
 maintenanceSheetSchema.pre(/^find/, function (next) {
   this.populate({

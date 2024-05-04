@@ -4,17 +4,21 @@ const AppError = require('./appError');
 const User = require('../models/userModels/userModel');
 const catchAsync = require('./catchAsync');
 
-// async function xxxxxxxx = () {
-// };
-
 // ###################  find user by token  ####################
-async function findUserByToken(req, res, next) {
+function getToken(reqHeaders) {
   let token;
   if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith('Bearer')
+    reqHeaders.authorization &&
+    reqHeaders.authorization.startsWith('Bearer')
   ) {
-    token = req.headers.authorization.split(' ')[1];
+    // remove 'Bearer' from the token string getting only token string.
+    token = reqHeaders.authorization.split(' ')[1];
+  } else if  (
+    reqHeaders.Authorization &&
+    reqHeaders.Authorization.startsWith('Bearer')
+  ) {
+    // remove 'Bearer' from the token string getting only token string.
+    token = reqHeaders.Authorization.split(' ')[1];
   }
 
   if (!token) {
@@ -22,11 +26,9 @@ async function findUserByToken(req, res, next) {
       new AppError('Vous devez être loggé pour avoir accès à cette page', 401),
     );
   }
-  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-  const currentUser = await User.findById(decoded.id);
-  return currentUser;
+  return token;
 }
 
 module.exports = {
-  findUserByToken,
+  getToken,
 };

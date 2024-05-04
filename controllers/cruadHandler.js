@@ -19,6 +19,7 @@ exports.getOne = (Model, popOptions) =>
     let query = Model.findById(req.params.id);
     if (popOptions) query = Model.findById(req.params.id).populate(popOptions);
     const role = res.locals.user.role;
+    const user = res.locals.user.login;
     const doc  = await query;
     if (!doc) {
       return next(new AppError('Item non trouvé', 404));
@@ -26,6 +27,7 @@ exports.getOne = (Model, popOptions) =>
     res.status(200).json({
       status: 'success',
       role: role,
+      login: user,
       data: {
         data: doc,
       },
@@ -37,14 +39,13 @@ exports.getAll = (Model, pop) =>
     let filter = {};
     if (req.params.equipmentId) filter = { equipment: req.params.equipmentId };
     const role = res.locals.user.role;
+    const user = res.locals.user.login;
     const features = new APIFeatures(Model.find(filter).populate(pop), req.query)
       .filter()
       .sort()
       .limitFields()
       .paginate();
-
-    let doc = await features.query;
-
+    let doc = await features.query; 
     if (req.query.search) {
         doc = doc.filter(item => item.name.toLowerCase().includes(req.query.search.toLowerCase()))
     }
@@ -52,6 +53,7 @@ exports.getAll = (Model, pop) =>
       status: 'success',
       results: doc.length,
       role: role,
+      login: user,
       data: doc,
     });
   });
