@@ -39,9 +39,7 @@ exports.createIncident = catchAsync(async (req, res, next) => {
   if (!equipment) {
     return next(new AppError("Pas d'equipment trouvé"), 404);
   }
-
   req.body.createdBy = await findUserByToken(req, res, next);
-
   const code = `${equipment.code}_I_N${equipment.nbIncidents}_${Date.now()}`;
   req.body.code = code;
   const incident = await Incident.create(req.body);
@@ -71,7 +69,6 @@ exports.commentIncident = catchAsync(async (req, res, next) => {
 
 exports.getComments = catchAsync(async (req, res, next) => {
   const comments = await IncidentCommentsByUser.find({incident : req.params.id }).populate('commentedBy');
-  // console.log(comments)
   res.status(200).json({
     status: 'success',
     data: {
@@ -94,9 +91,12 @@ exports.getIncidentsByIdEquipment = catchAsync(async (req, res, next) => {
 
 exports.getIncidentDetails = catchAsync(async (req, res, next) => {
   const incident = await Incident.findById(req.params.id).populate('createdBy');
-
+  const role = res.locals.user.role
+  const user = res.locals.user.login
   res.status(200).json({
     status: 'success',
+    role: role,
+    login: user,
     data: {
       data: incident,
     },

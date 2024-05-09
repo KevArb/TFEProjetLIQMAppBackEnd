@@ -155,3 +155,24 @@ exports.validateMaintenanceSheet = catchAsync(async (req, res, next) => {
 exports.getAllMaintenanceSheet = handler.getAll(MaintenanceSheet, 'equipment startedBy');
 exports.getMaintenanceSheet = handler.getOne(MaintenanceSheet);
 exports.updateMaintenanceSheet = handler.updateOne(MaintenanceSheet);
+
+
+exports.getMaintenanceByDate = catchAsync (async (req, res, next) => {
+  const day = new Date(req.params.day);
+  const nextDay = new Date(day);
+  nextDay.setDate(day.getDate() + 1)
+  const all = await MaintenanceSheet.find({ 
+    'createdAt': { 
+      $gte: day,
+      $lte: nextDay
+    }
+  }).populate('equipment startedBy')
+
+  console.log(all)
+  res.status(200).json({
+    status: 'success',
+    data: {
+      data: all,
+    },
+  });
+})

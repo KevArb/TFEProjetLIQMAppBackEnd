@@ -18,7 +18,6 @@ const incidentCommentsByUserSchema = new mongoose.Schema(
     comment: String,
     createdAt: {
       type: Date,
-      default: Date.now(),
     },
   },
   {
@@ -26,6 +25,11 @@ const incidentCommentsByUserSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   },
 );
+
+incidentCommentsByUserSchema.pre('save', function(next) {
+  this.createdAt = new Date();
+  next();
+})
 
 const IncidentCommentsByUser = mongoose.model(
   'IncidentCommentsByUser',

@@ -62,4 +62,6 @@ router
     maintenanceSheetController.actionStep
 );
 
+router.route('/getMaintenance/:day').get(maintenanceSheetController.getMaintenanceByDate)
+
 module.exports = router;
