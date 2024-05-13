@@ -53,11 +53,9 @@ exports.createIncident = catchAsync(async (req, res, next) => {
 });
 
 exports.commentIncident = catchAsync(async (req, res, next) => { 
-  console.log(req.params.id) 
   const incident = await Incident.findById(req.params.id);
   req.body.commentedBy = res.locals.user.id;
   req.body.incident = incident;
-  console.log(req.body)
   const incidentComment = await IncidentCommentsByUser.create(req.body);
   res.status(200).json({
     status: 'success',
@@ -69,6 +67,7 @@ exports.commentIncident = catchAsync(async (req, res, next) => {
 
 exports.getComments = catchAsync(async (req, res, next) => {
   const comments = await IncidentCommentsByUser.find({incident : req.params.id }).populate('commentedBy');
+
   res.status(200).json({
     status: 'success',
     data: {
@@ -78,9 +77,9 @@ exports.getComments = catchAsync(async (req, res, next) => {
 })
 
 exports.getIncidentsByIdEquipment = catchAsync(async (req, res, next) => {
-  let filter = {};
-  if (req.params.equipmentId) filter = { equipment: req.params.equipmentId };
-  const incidents = await Incident.find( filter ).populate('createdBy');
+  let filter = {}
+  if (req.params.equipmentId) filter = { equipment: req.params.equipmentId, isClosed: false };
+  const incidents = await Incident.find( filter ).populate('createdBy')
   res.status(200).json({
     status: 'success',
     data: {

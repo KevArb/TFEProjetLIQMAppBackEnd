@@ -30,7 +30,6 @@ exports.createNewSheet = catchAsync(async (req, res, next) => {
   req.body.name = `FM_${maintenance.code}_${numberMS}`;
   req.body.maintenanceSteps = maintenance.steps;
   req.body.startedBy = res.locals.user.id;
-  // req.body.maintenanceSteps.title = maintenance.steps.title;
   req.body.equipment = maintenance.equipment.id;
   const maintenanceSheet = (await MaintenanceSheet.create(req.body));
   maintenance.steps.forEach(async (el) => {
@@ -103,7 +102,7 @@ exports.actionStep = catchAsync(async (req, res, next) => {
   if (!step) {
     return next(new AppError('Page non trouvé', 404));
   }
-  res.status(201).json({
+  res.status(200).json({
     status: 'success', 
     data: {
       data: step,

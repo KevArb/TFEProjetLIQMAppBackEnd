@@ -18,11 +18,8 @@ exports.createMaintenance = catchAsync(async (req, res, next) => {
     return next(new AppError("Pas d'equipment trouvé arghf"), 404);
   }
 
-  // const countMaintenance = nbMaintenance() + 1;
-  // console.log(countMaintenance);
   const code = `M_${equipment.code}`;
   req.body.code = code;
-  // req.body.equipment = '65ad3211fa32571a0ad35568';
 
   const maintenance = await Maintenance.create(req.body);
   res.status(201).json({
