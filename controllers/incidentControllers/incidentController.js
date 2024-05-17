@@ -39,7 +39,7 @@ exports.createIncident = catchAsync(async (req, res, next) => {
   if (!equipment) {
     return next(new AppError("Pas d'equipment trouvé"), 404);
   }
-  req.body.createdBy = await findUserByToken(req, res, next);
+  req.body.createdBy = await findUserByToken(req.headers);
   const code = `${equipment.code}_I_N${equipment.nbIncidents}_${Date.now()}`;
   req.body.code = code;
   const incident = await Incident.create(req.body);

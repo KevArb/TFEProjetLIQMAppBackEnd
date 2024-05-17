@@ -69,6 +69,8 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Email ou mot de passe incorrecte', 401));
   }
 
+  res.locals.user = user;
+
   // 3) if everything is OK, send token to client
   createSendToken(user, 200, res);
 });

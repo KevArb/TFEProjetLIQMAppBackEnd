@@ -9,6 +9,7 @@ router.use(authController.protect);
 router.use(authController.isLoggedIn);
 
 router.route('/').get(incidentController.getAllIncidents);
+
 router
   .route('/getIncidents')
   .get(

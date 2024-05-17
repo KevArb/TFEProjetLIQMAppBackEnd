@@ -29,6 +29,15 @@ function getToken(reqHeaders) {
   return token;
 }
 
+async function findUserByToken(reqHeaders) {
+  const token = getToken(reqHeaders)
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  const currentUser = await User.findById(decoded.id);
+
+  return currentUser;
+}
+
 module.exports = {
   getToken,
+  findUserByToken,
 };

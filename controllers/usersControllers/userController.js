@@ -244,12 +244,9 @@ exports.updatePassword = async (req, res, next) => {
       new AppError('Vous devez être loggé pour avoir accès à cette page', 401),
     );
   }
-  console.log('3')
   //3) Check if user still exists
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
   const currentUser = await User.findById(decoded.id);
-
-  console.log(currentUser)
 
   // console.log(currentUser.password);
   // console.log(req.body.password)
