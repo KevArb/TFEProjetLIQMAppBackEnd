@@ -105,6 +105,7 @@ exports.logout = (req, res) => {
 
 // Middleware whcich check if user is well logged In
 exports.isLoggedIn = async (req, res, next) => {
+
   try {
       let token;
       if (
@@ -163,6 +164,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   //3) Check if user still exists
   const currentUser = await User.findById(decoded.id);
+
   if (!currentUser) {
     return next(
       new AppError("Le token appartenant à cette user n'est plus valide"),

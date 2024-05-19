@@ -21,8 +21,8 @@ const upload = multer({ storage: storage})
 router.post('/login', authController.login);
 router.get('/logout', authController.logout);
 
-// Need to be logged to get access to the follow routes
 router.use(authController.protect);
+router.use(authController.isLoggedIn);
 
 router.route('/profile').get(userController.getPersonnalData);
 // router('/:userLogin/updateMe').post
@@ -41,6 +41,7 @@ router
 
 router.route("/upload-image").post(upload.single('image'), userController.uploadImgProfil);
 router.route('/get-img-profil').get(userController.getImageProfil);
+
 
 router.route('/newUser').post(authController.createNewUser);
 

@@ -16,6 +16,7 @@ router.use('/:equipmentId/maintenance', maintenanceRouter);
 router.use('/:equipmentId/maintenanceSheet', maintenanceSheetRouter);
 
 router.route('/').get(equipmentController.getAllEquipments);
+
 router
   .route('/:id/archiveEquipment')
   .patch(equipmentController.archiveEquipment);
@@ -27,7 +28,5 @@ router
   .get(equipmentController.getEquipment)
   .patch(equipmentController.updateEquipment)
   .delete(equipmentController.deleteEquipment);
-
-
 
 module.exports = router;

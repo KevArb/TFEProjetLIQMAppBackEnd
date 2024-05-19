@@ -21,9 +21,11 @@ exports.getOne = (Model, popOptions) =>
     const role = res.locals.user.role;
     const user = res.locals.user.login;
     const doc  = await query;
+
     if (!doc) {
       return next(new AppError('Item non trouvé', 404));
     }
+    
     res.status(200).json({
       status: 'success',
       role: role,
@@ -38,7 +40,6 @@ exports.getAll = (Model, pop) =>
   catchAsync(async (req, res, next) => {
     let filter = {};
     if (req.params.equipmentId) filter = { equipment: req.params.equipmentId };
-    console.log('test')
     const role = res.locals.user.role;
     const user = res.locals.user.login;
     const features = new APIFeatures(Model.find(filter).populate(pop), req.query)

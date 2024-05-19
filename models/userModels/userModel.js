@@ -7,13 +7,13 @@ const userSchema = new mongoose.Schema(
   {
     firstName: {
       type: String,
-      required: [true, 'Le prénom doit être enseigné'],
+      required: [true, 'Le prénom doit être renseigné'],
       trim: true,
       minlength: 4,
     },
     lastName: {
       type: String,
-      required: [true, 'Le prénom doit être enseigné'],
+      required: [true, 'Le nom doit être renseigné'],
       trim: true,
     },
     login: {
@@ -29,12 +29,14 @@ const userSchema = new mongoose.Schema(
       reuiqred: [true, 'Un mail doit être renseigné'],
       lowercase: true,
       validate: [validator.isEmail, 'Veuillez renseigner un email valide'],
-      unqiue: true,
+      unique: true,
     },
     role: {
       type: String,
-      enum: ['user', 'manager', 'admin'],
-      default: 'user',
+      enum: {
+        values: ['user', 'manager', 'admin'],
+        message: 'Un rôle doit être renseigné'
+      },
     },
     photo: String,
     createdAt: {
@@ -69,6 +71,14 @@ const userSchema = new mongoose.Schema(
     passwordResetToken: String,
     passwordResetExpires: Date,
   },
+});
+
+userSchema.post('save', function(error, doc, next) {
+  if (error.keyValue != '' && error.code === 11000) {
+    next(new Error('Ce login existe déjà !!!'));
+  } else {
+    next(error);
+  }
 });
 
 // Middleware which gonna hash the new password.

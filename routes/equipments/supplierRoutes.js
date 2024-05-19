@@ -7,7 +7,7 @@ const authController = require('../../controllers/usersControllers/authControlle
 
 router.use(authController.protect);
 router.use(authController.isLoggedIn);
-// router.use(authController.restrictTo('admin', 'manager'));
+router.use(authController.restrictTo('admin', 'manager'));
 
 router.route('/').get(supplierController.getAllSuppliers);
 router.route('/newSupplier').post(supplierController.createSupplier);
